@@ -27,7 +27,7 @@ export class ClientesService {
 
     return this.clienteRepository.save({
       nombreCompleto: createClienteDto.nombreCompleto.trim(),
-      carnetIdentidad: createClienteDto.cedula_identidad,
+      cedula_identidad: createClienteDto.cedula_identidad,
       celular: createClienteDto.celular,
     });
   }
@@ -37,7 +37,7 @@ export class ClientesService {
     });
   }
 
- async findOne(id: number): Promise<Cliente> {
+  async findOne(id: number): Promise<Cliente> {
     const Clientes = await this.clienteRepository.findOne({
       where: { id },
     });

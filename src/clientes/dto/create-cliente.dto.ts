@@ -16,7 +16,7 @@ export class CreateClienteDto {
   })
   nombreCompleto: string;
 
-  @ApiProperty()
+  @ApiProperty()//funcion de swagger dependencia 4
   @IsNotEmpty({ message: 'El campo carnet de Identidad no debe ser vacío' })
   @IsString({
     message: 'El campo carnet de Identidad  debe ser de tipo cadena',

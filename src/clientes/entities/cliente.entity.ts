@@ -22,7 +22,7 @@ export class Cliente {
   @Column({ type: 'int', nullable: false })
   celular: number;
 
- @CreateDateColumn({ name: 'fecha_creacion' })
+  @CreateDateColumn({ name: 'fecha_creacion' })
   fechaCreacion: Date;
 
   @UpdateDateColumn({ name: 'fecha_modificacion' })
