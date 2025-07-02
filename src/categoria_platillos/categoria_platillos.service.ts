@@ -1,26 +1,79 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCategoriaPlatilloDto } from './dto/create-categoria_platillo.dto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CategoriaPlatillo } from './entities/categoria_platillo.entity';
+import { Repository } from 'typeorm';
 import { UpdateCategoriaPlatilloDto } from './dto/update-categoria_platillo.dto';
+import { CreateCategoriaPlatilloDto } from './dto/create-categoria_platillo.dto';
 
 @Injectable()
 export class CategoriaPlatillosService {
-  create(createCategoriaPlatilloDto: CreateCategoriaPlatilloDto) {
-    return 'This action adds a new categoriaPlatillo';
+  constructor(
+    @InjectRepository(CategoriaPlatillo)
+    private readonly CategoriaPlatilloRepository: Repository<CategoriaPlatillo>,
+  ) {}
+
+  async create(createCategoriaPlatilloDto: CreateCategoriaPlatilloDto) {
+    const existeCategoriaPlatillo =
+      await this.CategoriaPlatilloRepository.findOneBy({
+        nombre: createCategoriaPlatilloDto.nombre.trim(),
+        descripcion: createCategoriaPlatilloDto.descripcion,
+      });
+
+    if (existeCategoriaPlatillo) {
+      throw new ConflictException(
+        `La Categoria Platillo ${createCategoriaPlatilloDto.nombre} ya existe.`,
+      );
+    }
+
+    return this.CategoriaPlatilloRepository.save({
+      nombre: createCategoriaPlatilloDto.nombre.trim(),
+      descripcion: createCategoriaPlatilloDto.descripcion,
+    });
   }
 
-  findAll() {
-    return `This action returns all categoriaPlatillos`;
+  async findAll(): Promise<CategoriaPlatillo[]> {
+    return this.CategoriaPlatilloRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} categoriaPlatillo`;
+  async findOne(id: number): Promise<CategoriaPlatillo> {
+    const CategoriaPlatillos = await this.CategoriaPlatilloRepository.findOne({
+      where: { id },
+    });
+    if (!CategoriaPlatillos) {
+      throw new NotFoundException(`El CategoriaPlatillo no existe ${id}`);
+    }
+    return CategoriaPlatillos;
+  }
+  async update(
+    id: number,
+    updateCategoriaPlatilloDto: UpdateCategoriaPlatilloDto,
+  ): Promise<CategoriaPlatillo> {
+    const CategoriaPlatillo = await this.CategoriaPlatilloRepository.findOneBy({
+      id,
+    });
+    if (!CategoriaPlatillo) {
+      throw new NotFoundException(`El CategoriaPlatillo no existe ${id}`);
+    }
+    const CategoriaPlatilloUpdate = Object.assign(
+      CategoriaPlatillo,
+      updateCategoriaPlatilloDto,
+    );
+    return this.CategoriaPlatilloRepository.save(CategoriaPlatilloUpdate);
   }
 
-  update(id: number, updateCategoriaPlatilloDto: UpdateCategoriaPlatilloDto) {
-    return `This action updates a #${id} categoriaPlatillo`;
-  }
+  async remove(id: number) {
+    const CategoriaPlatillo = await this.CategoriaPlatilloRepository.findOneBy({
+      id,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} categoriaPlatillo`;
+    if (!CategoriaPlatillo) {
+      throw new NotFoundException(`El CategoriaPlatillo ${id} no existe.`);
+    }
+
+    return this.CategoriaPlatilloRepository.delete(id);
   }
 }

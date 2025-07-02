@@ -11,7 +11,7 @@ export class CreateClienteDto {
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo nombre Cliente no de ser vacío' })
   @IsString({ message: 'El campo nombre Cliente debe ser de tipo cadena' })
-  @MaxLength(100, {
+  @MaxLength(150, {
     message: 'El campo nombre Cliente no debe ser mayor a 15 caracteres',
   })
   nombreCompleto: string;

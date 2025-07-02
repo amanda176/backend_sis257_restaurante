@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EmpleadosService } from './empleados.service';
 import { CreateEmpleadoDto } from './dto/create-empleado.dto';
 import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Empleados')// nombre dentro del backend
 @Controller('empleados')
 export class EmpleadosController {
   constructor(private readonly empleadosService: EmpleadosService) {}

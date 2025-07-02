@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PlatillosService } from './platillos.service';
 import { CreatePlatilloDto } from './dto/create-platillo.dto';
 import { UpdatePlatilloDto } from './dto/update-platillo.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Platillos')// nombre dentro del backend
 @Controller('platillos')
 export class PlatillosController {
   constructor(private readonly platillosService: PlatillosService) {}

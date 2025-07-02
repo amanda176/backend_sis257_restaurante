@@ -1,15 +1,17 @@
-import { 
-    Column, 
-    CreateDateColumn, 
-    DeleteDateColumn, 
-    Entity, 
-    PrimaryGeneratedColumn, 
-    UpdateDateColumn
+import { Direccion } from 'src/direcciones/entities/direccion.entity';
+import { Pedido } from 'src/pedidos/entities/pedido.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('clientes')
 export class Cliente {
-
   @PrimaryGeneratedColumn('identity')
   id: number;
 
@@ -30,4 +32,10 @@ export class Cliente {
 
   @DeleteDateColumn({ name: 'fecha_eliminacion' })
   fechaEliminacion: Date;
+
+  @OneToMany(() => Pedido, (pedidos) => pedidos.clientes)
+  pedidos: Pedido[];
+
+  @OneToMany(() => Direccion, (direcciones) => direcciones.clientes)
+  direcciones: Direccion[];
 }

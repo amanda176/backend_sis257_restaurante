@@ -1,26 +1,81 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDireccioneDto } from './dto/create-direccione.dto';
-import { UpdateDireccioneDto } from './dto/update-direccione.dto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateDireccionDto } from './dto/create-direccion.dto';
+import { UpdateDireccionDto } from './dto/update-direccion.dto';
+import { Direccion } from './entities/direccion.entity';
 
 @Injectable()
 export class DireccionesService {
-  create(createDireccioneDto: CreateDireccioneDto) {
-    return 'This action adds a new direccione';
+  constructor(
+    @InjectRepository(Direccion)
+    private readonly DireccionRepository: Repository<Direccion>,
+  ) {}
+
+  async create(createDireccionDto: CreateDireccionDto) {
+    const existeDireccion = await this.DireccionRepository.findOneBy({
+      direccion: createDireccionDto.direccion.trim(),
+      piso: createDireccionDto.piso,
+      indicaciones: createDireccionDto.indicaciones,
+      estado: createDireccionDto.estado,
+      idCliente: createDireccionDto.idCliente,
+    });
+
+    if (existeDireccion) {
+      throw new ConflictException(
+        `La Direccion ${createDireccionDto.direccion} ya existe.`,
+      );
+    }
+
+    return this.DireccionRepository.save({
+      direccion: createDireccionDto.direccion.trim(),
+      piso: createDireccionDto.piso,
+      indicaciones: createDireccionDto.indicaciones,
+      estado: createDireccionDto.estado,
+      idCliente: createDireccionDto.idCliente,
+    });
   }
 
-  findAll() {
-    return `This action returns all direcciones`;
+  async findAll(): Promise<Direccion[]> {
+    return this.DireccionRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} direccione`;
+  async findOne(id: number): Promise<Direccion> {
+    const Direccions = await this.DireccionRepository.findOne({
+      where: { id },
+    });
+    if (!Direccions) {
+      throw new NotFoundException(`La Direccion no existe ${id}`);
+    }
+    return Direccions;
+  }
+  async update(
+    id: number,
+    updateDireccionDto: UpdateDireccionDto,
+  ): Promise<Direccion> {
+    const Direccion = await this.DireccionRepository.findOneBy({
+      id,
+    });
+    if (!Direccion) {
+      throw new NotFoundException(`La Direccion no existe ${id}`);
+    }
+    const DireccionUpdate = Object.assign(Direccion, updateDireccionDto);
+    return this.DireccionRepository.save(DireccionUpdate);
   }
 
-  update(id: number, updateDireccioneDto: UpdateDireccioneDto) {
-    return `This action updates a #${id} direccione`;
-  }
+  async remove(id: number) {
+    const Direccion = await this.DireccionRepository.findOneBy({
+      id,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} direccione`;
+    if (!Direccion) {
+      throw new NotFoundException(`La Direccion ${id} no existe.`);
+    }
+
+    return this.DireccionRepository.delete(id);
   }
 }

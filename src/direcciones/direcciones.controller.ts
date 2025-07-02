@@ -1,15 +1,18 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { DireccionesService } from './direcciones.service';
-import { CreateDireccioneDto } from './dto/create-direccione.dto';
-import { UpdateDireccioneDto } from './dto/update-direccione.dto';
+import { CreateDireccionDto } from './dto/create-direccion.dto';
+import { UpdateDireccionDto } from './dto/update-direccion.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('Direcciones')// nombre dentro del backend
 @Controller('direcciones')
 export class DireccionesController {
   constructor(private readonly direccionesService: DireccionesService) {}
 
   @Post()
-  create(@Body() createDireccioneDto: CreateDireccioneDto) {
-    return this.direccionesService.create(createDireccioneDto);
+  create(@Body() createDireccionDto: CreateDireccionDto) {
+    return this.direccionesService.create(createDireccionDto);
   }
 
   @Get()
@@ -23,8 +26,8 @@ export class DireccionesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDireccioneDto: UpdateDireccioneDto) {
-    return this.direccionesService.update(+id, updateDireccioneDto);
+  update(@Param('id') id: string, @Body() updateDireccionDto: UpdateDireccionDto) {
+    return this.direccionesService.update(+id, updateDireccionDto);
   }
 
   @Delete(':id')
