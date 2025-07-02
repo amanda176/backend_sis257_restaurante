@@ -18,7 +18,7 @@ export class CreateUsuarioDto {
   })
   clave: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'El rol debe ser administrador, cajero o repartidor '})
   @IsNotEmpty({ message: 'El campo  rol  no de ser vacío' })
   @IsString({ message: 'El campo  rol debe ser de tipo cadena' })
   @MaxLength(50, {

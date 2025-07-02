@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CreateDireccionDto } from './dto/create-direccion.dto';
 import { UpdateDireccionDto } from './dto/update-direccion.dto';
 import { Direccion } from './entities/direccion.entity';
+import { Cliente } from 'src/clientes/entities/cliente.entity';
 
 @Injectable()
 export class DireccionesService {
@@ -22,7 +23,7 @@ export class DireccionesService {
       piso: createDireccionDto.piso,
       indicaciones: createDireccionDto.indicaciones,
       estado: createDireccionDto.estado,
-      idCliente: createDireccionDto.idCliente,
+      clientes: { id: createDireccionDto.idCliente },
     });
 
     if (existeDireccion) {
@@ -36,17 +37,24 @@ export class DireccionesService {
       piso: createDireccionDto.piso,
       indicaciones: createDireccionDto.indicaciones,
       estado: createDireccionDto.estado,
-      idCliente: createDireccionDto.idCliente,
+      clientes: { id: createDireccionDto.idCliente },
     });
   }
 
   async findAll(): Promise<Direccion[]> {
-    return this.DireccionRepository.find({});
+    return this.DireccionRepository.find({
+      relations: {
+        clientes: true,
+      },
+    });
   }
 
   async findOne(id: number): Promise<Direccion> {
     const Direccions = await this.DireccionRepository.findOne({
       where: { id },
+      relations: {
+        clientes: true,
+      },
     });
     if (!Direccions) {
       throw new NotFoundException(`La Direccion no existe ${id}`);
@@ -64,6 +72,9 @@ export class DireccionesService {
       throw new NotFoundException(`La Direccion no existe ${id}`);
     }
     const DireccionUpdate = Object.assign(Direccion, updateDireccionDto);
+    DireccionUpdate.clientes = {
+      id: updateDireccionDto.idCliente,
+    } as Cliente;
     return this.DireccionRepository.save(DireccionUpdate);
   }
 

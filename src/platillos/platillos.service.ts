@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { Platillo } from './entities/platillo.entity';
 import { CreatePlatilloDto } from './dto/create-platillo.dto';
 import { UpdatePlatilloDto } from './dto/update-platillo.dto';
-
+import { CategoriaPlatillo } from 'src/categoria_platillos/entities/categoria_platillo.entity';
 
 @Injectable()
 export class PlatillosService {
@@ -18,15 +18,13 @@ export class PlatillosService {
   ) {}
 
   async create(createPlatilloDto: CreatePlatilloDto) {
-    const existePlatillo =
-      await this.PlatilloRepository.findOneBy({
-        nombre: createPlatilloDto.nombre.trim(),
-        precio: createPlatilloDto.precio,
-        stock: createPlatilloDto.stock,
-        tiempo_preparacion: createPlatilloDto.tiempo_preparacion,
-        idCategoriaPlatillo: createPlatilloDto.idCategoriaPlatillo,
-
-      });
+    const existePlatillo = await this.PlatilloRepository.findOneBy({
+      nombre: createPlatilloDto.nombre.trim(),
+      precio: createPlatilloDto.precio,
+      stock: createPlatilloDto.stock,
+      tiempo_preparacion: createPlatilloDto.tiempo_preparacion,
+      detalles: { id: createPlatilloDto.idCategoriaPlatillo },
+    });
 
     if (existePlatillo) {
       throw new ConflictException(
@@ -38,18 +36,22 @@ export class PlatillosService {
       nombre: createPlatilloDto.nombre.trim(),
       precio: createPlatilloDto.precio,
       stock: createPlatilloDto.stock,
-      tiempo_preparacion: createPlatilloDto.tiempo_preparacion,   
-      idCategoriaPlatillo: createPlatilloDto.idCategoriaPlatillo,    
+      tiempo_preparacion: createPlatilloDto.tiempo_preparacion,
+      detalles: { id: createPlatilloDto.idCategoriaPlatillo },
     });
   }
 
   async findAll(): Promise<Platillo[]> {
-    return this.PlatilloRepository.find({});
+    return this.PlatilloRepository.find({
+      relations: { detalles: true },
+    });
   }
 
   async findOne(id: number): Promise<Platillo> {
     const Platillos = await this.PlatilloRepository.findOne({
       where: { id },
+      relations: { detalles: true },
+
     });
     if (!Platillos) {
       throw new NotFoundException(`El Platillo no existe ${id}`);
@@ -66,10 +68,8 @@ export class PlatillosService {
     if (!Platillo) {
       throw new NotFoundException(`El Platillo no existe ${id}`);
     }
-    const PlatilloUpdate = Object.assign(
-      Platillo,
-      updatePlatilloDto,
-    );
+    const PlatilloUpdate = Object.assign(Platillo, updatePlatilloDto);
+    PlatilloUpdate.categoria_platillos = { id: updatePlatilloDto.idCategoriaPlatillo } as CategoriaPlatillo;
     return this.PlatilloRepository.save(PlatilloUpdate);
   }
 

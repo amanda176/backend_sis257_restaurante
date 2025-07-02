@@ -3,18 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDetallePedidoDto {
   @ApiProperty()
-    @IsDefined({ message: 'El campo Pedido debe estar definido' })
-    @IsNumber({}, { message: 'El campo Pedido debe ser de tipo numérico' })
-  readonly idPedido: number;
-
-  @ApiProperty()
-    @IsDefined({ message: 'El campo Platillo debe estar definido' })
-    @IsNumber({}, { message: 'El campo Platillo debe ser de tipo numérico' })
-  readonly idPlatillo: number;
-
-  @ApiProperty()
-    @IsDefined({ message: 'El campo Cantidad debe estar definido' })
-    @IsNumber({}, { message: 'El campo Cantidad debe ser de tipo numérico' })
+  @IsDefined({ message: 'El campo Cantidad debe estar definido' })
+  @IsNumber({}, { message: 'El campo Cantidad debe ser de tipo numérico' })
   cantidad: number;
 
   @ApiProperty()
@@ -26,4 +16,14 @@ export class CreateDetallePedidoDto {
   @IsNotEmpty()
   @IsNumber()
   subtotal: number;
+  
+  @ApiProperty()
+  @IsDefined({ message: 'El campo Pedido debe estar definido' })
+  @IsNumber({}, { message: 'El campo Pedido debe ser de tipo numérico' })
+  readonly idPedido: number;
+
+  @ApiProperty()
+  @IsDefined({ message: 'El campo Platillo debe estar definido' })
+  @IsNumber({}, { message: 'El campo Platillo debe ser de tipo numérico' })
+  readonly idPlatillo: number;
 }

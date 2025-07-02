@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { DetallePedido } from './entities/detalle_pedido.entity';
 import { CreateDetallePedidoDto } from './dto/create-detalle_pedido.dto';
 import { UpdateDetallePedidoDto } from './dto/update-detalle_pedido.dto';
+import { Platillo } from 'src/platillos/entities/platillo.entity';
+import { Pedido } from 'src/pedidos/entities/pedido.entity';
 
 @Injectable()
 export class DetallePedidosService {
@@ -21,32 +23,41 @@ export class DetallePedidosService {
       cantidad: createDetallePedidoDto.cantidad,
       precio_unitario: createDetallePedidoDto.precio_unitario,
       subtotal: createDetallePedidoDto.subtotal,
-      idPedido: createDetallePedidoDto.idPedido,
-      idPlatillo: createDetallePedidoDto.idPlatillo,
+      pedidos: { id: createDetallePedidoDto.idPedido },
+      platillos: { id: createDetallePedidoDto.idPlatillo },
     });
 
     if (existeDetallePedido) {
       throw new ConflictException(
-        `La Detalle del pedido ${createDetallePedidoDto.idPlatillo} ya existe.`,
+        `Detalle del pedido ${createDetallePedidoDto.cantidad} ya existe.`,
       );
     }
 
     return this.DetallePedidoRepository.save({
-      idPlatillo: createDetallePedidoDto.idPlatillo,
-      idPedido: createDetallePedidoDto.idPedido,
       cantidad: createDetallePedidoDto.cantidad,
       precio_unitario: createDetallePedidoDto.precio_unitario,
       subtotal: createDetallePedidoDto.subtotal,
+      pedidos: { id: createDetallePedidoDto.idPedido },
+      platillos: { id: createDetallePedidoDto.idPlatillo },
     });
   }
 
   async findAll(): Promise<DetallePedido[]> {
-    return this.DetallePedidoRepository.find({});
+    return this.DetallePedidoRepository.find({
+      relations: {
+        pedidos: true,
+        platillos: true,
+      },
+    });
   }
 
   async findOne(id: number): Promise<DetallePedido> {
     const DetallePedidos = await this.DetallePedidoRepository.findOne({
       where: { id },
+      relations: {
+        pedidos: true,
+        platillos: true,
+      },
     });
     if (!DetallePedidos) {
       throw new NotFoundException(`El DetallePedido no existe ${id}`);
@@ -67,6 +78,12 @@ export class DetallePedidosService {
       DetallePedido,
       updateDetallePedidoDto,
     );
+    DetallePedidoUpdate.pedidos = {
+      id: updateDetallePedidoDto.idPedido,
+    } as Pedido;
+    DetallePedidoUpdate.platillos = {
+      id: updateDetallePedidoDto.idPlatillo,
+    } as Platillo;
     return this.DetallePedidoRepository.save(DetallePedidoUpdate);
   }
 
