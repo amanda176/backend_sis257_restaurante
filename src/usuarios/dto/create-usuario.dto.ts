@@ -1,31 +1,35 @@
-import { IsNotEmpty, IsString, IsIn, MaxLength, IsDefined, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateUsuarioDto {
   @ApiProperty()
-  @IsNotEmpty({ message: 'El campo  usuario  no de ser vacío' })
-  @IsString({ message: 'El campo  usuario debe ser de tipo cadena' })
-  @MaxLength(50, {
-    message: 'El campo  usuario no debe ser mayor a 150 caracteres',
+  @IsNotEmpty({ message: 'El campo usuario es obligatorio' })
+  @IsString({ message: 'El campo usuario debe ser de tipo cadena' })
+  @MaxLength(15, {
+    message: 'El campo usuario no debe ser mayor a 15 caracteres',
   })
-  usuario_login: string;
+  readonly usuario: string;
 
   @ApiProperty()
-  @IsNotEmpty({ message: 'El campo clave  no de ser vacío' })
-  @IsString({ message: 'El campo vclave debe ser de tipo cadena' })
-  @MaxLength(150, {
-    message: 'El campo clave no debe ser mayor a 150 caracteres',
+  @IsNotEmpty({ message: 'El campo email es obligatorio' })
+  @IsString({ message: 'El campo email debe ser de tipo cadena' })
+  @MaxLength(70, {
+    message: 'El campo email no debe ser mayor a 70 caracteres',
   })
-  clave: string;
+  readonly email: string;
 
-  @ApiProperty({ example: 'El rol debe ser administrador, cajero o repartidor '})
-  @IsNotEmpty({ message: 'El campo  rol  no de ser vacío' })
-  @IsString({ message: 'El campo  rol debe ser de tipo cadena' })
-  @MaxLength(50, {
-    message: 'El campo  rol no debe ser mayor a 150 caracteres',
-  })
-  @IsIn(['administrador', 'cajero', 'repartidor'])
-  rol: string;
+  @ApiProperty()
+  @IsNotEmpty({ message: 'El campo rol es obligatorio' })
+  @IsString({ message: 'El campo rol debe ser de tipo cadena' })
+  @MaxLength(15, { message: 'El campo rol no debe ser mayor a 15 caracteres' })
+  readonly rol: string;
 
   @ApiProperty()
   @IsDefined({ message: 'El campo Empleado debe estar definido' })

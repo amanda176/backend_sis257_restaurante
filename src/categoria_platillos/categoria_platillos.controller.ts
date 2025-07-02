@@ -1,14 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { CategoriaPlatillosService } from './categoria_platillos.service';
 import { CreateCategoriaPlatilloDto } from './dto/create-categoria_platillo.dto';
 import { UpdateCategoriaPlatilloDto } from './dto/update-categoria_platillo.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-
-@ApiTags('Categoria Platillos')// nombre dentro del backend
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@ApiTags('Categoria Platillos') // nombre dentro del backend
 @Controller('categoria-platillos')
 export class CategoriaPlatillosController {
-  constructor(private readonly categoriaPlatillosService: CategoriaPlatillosService) {}
+  constructor(
+    private readonly categoriaPlatillosService: CategoriaPlatillosService,
+  ) {}
 
   @Post()
   create(@Body() createCategoriaPlatilloDto: CreateCategoriaPlatilloDto) {
@@ -26,8 +39,14 @@ export class CategoriaPlatillosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoriaPlatilloDto: UpdateCategoriaPlatilloDto) {
-    return this.categoriaPlatillosService.update(+id, updateCategoriaPlatilloDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoriaPlatilloDto: UpdateCategoriaPlatilloDto,
+  ) {
+    return this.categoriaPlatillosService.update(
+      +id,
+      updateCategoriaPlatilloDto,
+    );
   }
 
   @Delete(':id')

@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe, VersioningType } from '@nestjs/common';//223_09_1 36_09
+import { ValidationPipe, VersioningType } from '@nestjs/common'; //223_09_1 36_09
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -13,17 +13,21 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('SIS257 - 2025')
-    .setDescription(
-      'Presentacion Final s1_2025',
-    )
+    .setDescription('Presentacion Final s1_2025')
     .setVersion('1.0')
     //.addTag('Por defecto')
-  /*.addBearerAuth({
+    .addBearerAuth({
       type: 'http',
       scheme: 'bearer',
       bearerFormat: 'JWT',
       in: 'header',
-    })*/
+    })
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      in: 'header',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('apidoc', app, document);

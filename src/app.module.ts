@@ -12,6 +12,7 @@ import { DireccionesModule } from './direcciones/direcciones.module';
 import { EmpleadosModule } from './empleados/empleados.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { PlatillosModule } from './platillos/platillos.module';
+import { AuthModule } from './auth/auth.module';
 import { UsuariosModule } from './usuarios/usuarios.module';
 
 
@@ -38,8 +39,9 @@ import { UsuariosModule } from './usuarios/usuarios.module';
     PedidosModule,
     PlatillosModule,
     UsuariosModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  //controllers: [AppController],
+  //providers: [AppService],
 })
 export class AppModule {}

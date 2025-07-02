@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { PlatillosService } from './platillos.service';
 import { CreatePlatilloDto } from './dto/create-platillo.dto';
 import { UpdatePlatilloDto } from './dto/update-platillo.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags('Platillos')// nombre dentro del backend
 @Controller('platillos')
 export class PlatillosController {

@@ -2,45 +2,37 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Usuario } from './entities/usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Usuario } from './entities/usuario.entity';
+import { Repository } from 'typeorm';
 import { Empleado } from 'src/empleados/entities/empleado.entity';
 
 @Injectable()
 export class UsuariosService {
   constructor(
-    @InjectRepository(Usuario)
-    private readonly UsuarioRepository: Repository<Usuario>,
+    @InjectRepository(Usuario) private usuariosRepository: Repository<Usuario>,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto) {
-    const existeUsuario = await this.UsuarioRepository.findOneBy({
-      usuario_login: createUsuarioDto.usuario_login.trim(),
-      clave: createUsuarioDto.clave,
-      rol: createUsuarioDto.rol,
-      empleados: { id: createUsuarioDto.idEmpleado },
+  async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
+    const existe = await this.usuariosRepository.findOneBy({
+      usuario: createUsuarioDto.usuario.trim(),
     });
+    if (existe) throw new ConflictException('El usuario ya existe');
 
-    if (existeUsuario) {
-      throw new ConflictException(
-        `El Usuario ${createUsuarioDto.usuario_login} ya existe.`,
-      );
-    }
-
-    return this.UsuarioRepository.save({
-      usuario_login: createUsuarioDto.usuario_login.trim(),
-      clave: createUsuarioDto.clave,
-      rol: createUsuarioDto.rol,
-      empleados: { id: createUsuarioDto.idEmpleado },
-    });
+    const usuario = new Usuario();
+    usuario.usuario = createUsuarioDto.usuario.trim();
+    usuario.clave = process.env.DEFAULT_PASSWORD ?? '';
+    usuario.email = createUsuarioDto.email.trim();
+    usuario.rol = createUsuarioDto.rol.trim();
+    usuario.empleados = { id: createUsuarioDto.idEmpleado } as Empleado;
+    return this.usuariosRepository.save(usuario);
   }
-
   async findAll(): Promise<Usuario[]> {
-    return this.UsuarioRepository.find({
+    return this.usuariosRepository.find({
       relations: {
         empleados: true,
       },
@@ -48,41 +40,39 @@ export class UsuariosService {
   }
 
   async findOne(id: number): Promise<Usuario> {
-    const Usuarios = await this.UsuarioRepository.findOne({
-      where: { id },
-      relations: {
-        empleados: true,
-      },
-    });
-    if (!Usuarios) {
-      throw new NotFoundException(`El Usuario no existe ${id}`);
-    }
-    return Usuarios;
+    const usuario = await this.usuariosRepository.findOneBy({ id });
+    if (!usuario) throw new NotFoundException('El usuario no existe');
+    return usuario;
   }
+
   async update(
     id: number,
     updateUsuarioDto: UpdateUsuarioDto,
   ): Promise<Usuario> {
-    const Usuario = await this.UsuarioRepository.findOneBy({
-      id,
-    });
-    if (!Usuario) {
-      throw new NotFoundException(`El Usuario no existe ${id}`);
-    }
-    const UsuarioUpdate = Object.assign(Usuario, updateUsuarioDto);
-    UsuarioUpdate.empleados = { id: updateUsuarioDto.idEmpleado } as Empleado;
-    return this.UsuarioRepository.save(UsuarioUpdate);
+    const usuario = await this.findOne(id);
+    const usuarioUpdate = Object.assign(usuario, updateUsuarioDto);
+    usuarioUpdate.empleados = { id: updateUsuarioDto.idEmpleado } as Empleado;
+    return this.usuariosRepository.save(usuarioUpdate);
   }
 
   async remove(id: number) {
-    const Usuario = await this.UsuarioRepository.findOneBy({
-      id,
+    const usuario = await this.findOne(id);
+    return this.usuariosRepository.softRemove(usuario);
+  }
+
+  async validate(usuario: string, clave: string): Promise<Usuario> {
+    const usuarioOk = await this.usuariosRepository.findOne({
+      where: { usuario },
+      select: ['id', 'usuario', 'clave', 'email', 'rol'],
     });
 
-    if (!Usuario) {
-      throw new NotFoundException(`El Usuario ${id} no existe.`);
+    if (!usuarioOk) throw new NotFoundException('Usuario inexistente');
+
+    if (!(await usuarioOk?.validatePassword(clave))) {
+      throw new UnauthorizedException('Clave incorrecta');
     }
 
-    return this.UsuarioRepository.delete(id);
+    usuarioOk.clave = '';
+    return usuarioOk;
   }
 }
