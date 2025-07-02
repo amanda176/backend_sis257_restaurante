@@ -20,6 +20,9 @@ export class Platillo {
   @Column({ type: 'varchar', length: 100, nullable: false })
   nombre: string;
 
+  @Column({ type: 'varchar', length: 250, nullable: false })
+  urlPlatillo: string;
+
   @Column('decimal', { precision: 10, scale: 2 })
   precio: number;
 

@@ -20,6 +20,7 @@ export class PlatillosService {
   async create(createPlatilloDto: CreatePlatilloDto) {
     const existePlatillo = await this.PlatilloRepository.findOneBy({
       nombre: createPlatilloDto.nombre.trim(),
+      urlPlatillo: createPlatilloDto.urlPlatillo.trim(),
       precio: createPlatilloDto.precio,
       stock: createPlatilloDto.stock,
       tiempo_preparacion: createPlatilloDto.tiempo_preparacion,

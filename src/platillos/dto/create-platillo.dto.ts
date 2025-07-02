@@ -19,6 +19,19 @@ export class CreatePlatilloDto {
   })
   nombre: string;
 
+    @ApiProperty()
+  @IsNotEmpty({
+    message: 'El campo urlPlatillo del producto no debe ser vacío',
+  })
+  @IsString({
+    message: 'El campo urlPlatillo del producto debe ser de tipo cadena',
+  })
+  @MaxLength(250, {
+    message:
+      'El campo urlPlatillo del producto no debe ser mayor a 250 caracteres',
+  })
+  readonly urlPlatillo: string;
+
   @ApiProperty()
   @IsDefined({ message: 'El campo precio debe estar definido' })
   @IsNumber({}, { message: 'El campo precio debe ser de tipo numérico' })
