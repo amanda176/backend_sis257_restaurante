@@ -2,7 +2,7 @@ import { IsDefined, IsNotEmpty, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDetallePedidoDto {
-  @ApiProperty()
+  @ApiProperty({ example: '10' })
   @IsDefined({ message: 'El campo Cantidad debe estar definido' })
   @IsNumber({}, { message: 'El campo Cantidad debe ser de tipo numérico' })
   cantidad: number;

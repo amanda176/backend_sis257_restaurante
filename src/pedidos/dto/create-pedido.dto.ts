@@ -13,12 +13,12 @@ export class CreatePedidoDto {
   @IsDateString({}, { message: 'El campo fecha debe ser de tipo fecha' })
   readonly fecha: Date;
 
-  @ApiProperty()
+  @ApiProperty({ example: '15' })
   @IsDefined({ message: 'El campo total debe estar definido' })
   @IsNumber({}, { message: 'El campo total debe ser de tipo numérico' })
   total: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'activo' })
   @IsNotEmpty({ message: 'El campo estado no debe ser vacío' })
   @IsString({
     message: 'El campo estado debe ser de tipo cadena',

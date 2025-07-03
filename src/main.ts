@@ -12,8 +12,8 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('SIS257 - 2025')
-    .setDescription('Presentacion Final s1_2025')
+    .setTitle('SIS257 - 2025 Estudiantes Jhojan y Amanda')
+    .setDescription('Presentacion Final s1_2025 2da Instancia')
     .setVersion('1.0')
     //.addTag('Por defecto')
     .addBearerAuth({

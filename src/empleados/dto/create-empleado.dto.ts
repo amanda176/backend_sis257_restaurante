@@ -8,7 +8,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEmpleadoDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'Amanda' })
   @IsNotEmpty({ message: 'El campo nombre no de ser vacío' })
   @IsString({ message: 'El campo nombre debe ser de tipo cadena' })
   @MaxLength(100, {
@@ -16,7 +16,7 @@ export class CreateEmpleadoDto {
   })
   nombres: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Serrudo' })
   @IsNotEmpty({ message: 'El campo Primer Apellido no de ser vacío' })
   @IsString({ message: 'El campo Primer Apellido debe ser de tipo cadena' })
   @MaxLength(100, {
@@ -24,7 +24,7 @@ export class CreateEmpleadoDto {
   })
   primer_apellido: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Salazar' })
   @IsNotEmpty({ message: 'El campo Segundo Apellido no de ser vacío' })
   @IsString({ message: 'El campo Segundo Apellido debe ser de tipo cadena' })
   @MaxLength(100, {
@@ -32,7 +32,7 @@ export class CreateEmpleadoDto {
   })
   segundo_apellido: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '10402323Ch' })
   @IsNotEmpty({ message: 'El campo CI no de ser vacío' })
   @IsString({ message: 'El campo CI debe ser de tipo cadena' })
   @MaxLength(20, {
@@ -40,7 +40,7 @@ export class CreateEmpleadoDto {
   })
   cedula_identidad: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Junin #34' })
   @IsNotEmpty({ message: 'El campo Direccion no de ser vacío' })
   @IsString({ message: 'El campo Direccion debe ser de tipo cadena' })
   @MaxLength(200, {
@@ -48,7 +48,7 @@ export class CreateEmpleadoDto {
   })
   direccion: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '68632378' })
   @IsDefined({ message: 'El campo número debe estar definido' })
   @IsNumber({}, { message: 'El campo número debe ser de tipo numérico' })
   readonly celular: number;

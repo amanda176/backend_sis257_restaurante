@@ -9,7 +9,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePlatilloDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'Jhojan' })
   @IsNotEmpty({ message: 'El campo carnet de Identidad no debe ser vacío' })
   @IsString({
     message: 'El campo carnet de Identidad  debe ser de tipo cadena',
@@ -19,7 +19,7 @@ export class CreatePlatilloDto {
   })
   nombre: string;
 
-    @ApiProperty()
+    @ApiProperty({ example: 'https://i.pinimg.com/736x/c7/c1/24/c7c124c4f3958564b3b48dbeda4c1d43.jpg' })
   @IsNotEmpty({
     message: 'El campo urlPlatillo del producto no debe ser vacío',
   })
@@ -32,19 +32,19 @@ export class CreatePlatilloDto {
   })
   readonly urlPlatillo: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '15' })
   @IsDefined({ message: 'El campo precio debe estar definido' })
   @IsNumber({}, { message: 'El campo precio debe ser de tipo numérico' })
   @Min(0)
   precio: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: '5' })
   @IsDefined({ message: 'El campo stock debe estar definido' })
   @IsNumber({}, { message: 'El campo stock debe ser de tipo numérico' })
   @Min(0)
   readonly stock: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: '10 min' })
   @IsNotEmpty({ message: 'El campo carnet de Identidad no debe ser vacío' })
   @IsString({
     message: 'El campo carnet de Identidad  debe ser de tipo cadena',

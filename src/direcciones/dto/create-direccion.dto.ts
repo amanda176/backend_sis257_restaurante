@@ -14,7 +14,7 @@ export class CreateDireccionDto {
   @IsNumber({}, { message: 'El campo Cliente debe ser de tipo numérico' })
   readonly idCliente: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Tapacari #43' })
   @IsNotEmpty({ message: 'El campo Direccion  no de ser vacío' })
   @IsString({ message: 'El campo Direccion debe ser de tipo cadena' })
   @MaxLength(200, {
@@ -36,7 +36,7 @@ export class CreateDireccionDto {
   })
   indicaciones: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'Activo' })
   @IsNotEmpty({ message: 'El campo estado  no de ser vacío' })
   @IsString({ message: 'El campo estado debe ser de tipo cadena' })
   @MaxLength(20, {
