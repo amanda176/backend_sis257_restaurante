@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('categoria_platillos')
+@Entity('categoriaPlatillos')
 export class CategoriaPlatillo {
   @PrimaryGeneratedColumn('identity')
   id: number;

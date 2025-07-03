@@ -23,8 +23,8 @@ export class PlatillosService {
       urlPlatillo: createPlatilloDto.urlPlatillo.trim(),
       precio: createPlatilloDto.precio,
       stock: createPlatilloDto.stock,
-      tiempo_preparacion: createPlatilloDto.tiempo_preparacion,
-      detalles: { id: createPlatilloDto.idCategoriaPlatillo },
+      tiempo_preparacion: createPlatilloDto.tiempo_preparacion.trim(),
+      idCategoriaPlatillo: createPlatilloDto.idCategoriaPlatillo,
     });
 
     if (existePlatillo) {
@@ -35,24 +35,24 @@ export class PlatillosService {
 
     return this.PlatilloRepository.save({
       nombre: createPlatilloDto.nombre.trim(),
+      urlPlatillo: createPlatilloDto.urlPlatillo.trim(),
       precio: createPlatilloDto.precio,
       stock: createPlatilloDto.stock,
-      tiempo_preparacion: createPlatilloDto.tiempo_preparacion,
-      detalles: { id: createPlatilloDto.idCategoriaPlatillo },
+      tiempo_preparacion: createPlatilloDto.tiempo_preparacion.trim(),
+      idCategoriaPlatillo: createPlatilloDto.idCategoriaPlatillo,
     });
   }
 
   async findAll(): Promise<Platillo[]> {
     return this.PlatilloRepository.find({
-      relations: { detalles: true },
+      relations: { categoria_platillos: true },
     });
   }
 
   async findOne(id: number): Promise<Platillo> {
     const Platillos = await this.PlatilloRepository.findOne({
       where: { id },
-      relations: { detalles: true },
-
+      relations: { categoria_platillos: true },
     });
     if (!Platillos) {
       throw new NotFoundException(`El Platillo no existe ${id}`);

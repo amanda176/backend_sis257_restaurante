@@ -17,7 +17,7 @@ export class CreatePlatilloDto {
   @MaxLength(100, {
     message: 'El campo carnet de Identidad  no debe ser mayor a 100 caracteres',
   })
-  nombre: string;
+  readonly nombre: string;
 
     @ApiProperty({ example: 'https://i.pinimg.com/736x/c7/c1/24/c7c124c4f3958564b3b48dbeda4c1d43.jpg' })
   @IsNotEmpty({
@@ -36,7 +36,7 @@ export class CreatePlatilloDto {
   @IsDefined({ message: 'El campo precio debe estar definido' })
   @IsNumber({}, { message: 'El campo precio debe ser de tipo numérico' })
   @Min(0)
-  precio: number;
+  readonly precio: number;
 
   @ApiProperty({ example: '5' })
   @IsDefined({ message: 'El campo stock debe estar definido' })
@@ -52,7 +52,7 @@ export class CreatePlatilloDto {
   @MaxLength(100, {
     message: 'El campo carnet de Identidad  no debe ser mayor a 100 caracteres',
   })
-  tiempo_preparacion: string;
+  readonly tiempo_preparacion: string;
 
   @ApiProperty()
   @IsDefined({ message: 'El campo Categoria debe estar definido' })

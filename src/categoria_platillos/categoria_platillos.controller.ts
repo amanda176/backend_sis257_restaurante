@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @ApiTags('Categoria Platillos') // nombre dentro del backend
-@Controller('categoria-platillos')
+@Controller('categoriaPlatillos')
 export class CategoriaPlatillosController {
   constructor(
     private readonly categoriaPlatillosService: CategoriaPlatillosService,
